@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Иван Лялин](https://up.htmlacademy.ru/javascript/16/user/461303).
-* Наставник: `Неизвестно`.
+* Наставник: Гений Трасковский.
 
 ---
 
