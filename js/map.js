@@ -76,24 +76,27 @@ for (var i = 0; i < OBJECTS_QUANTITY; i++) {
   objects.push(objectDescripton);
 }
 
-console.log(objectDescripton.location.x);
+// console.log(objectDescripton.location.x);
 
 document.querySelector('.map').classList.remove('map--faded');
 
 var pinsList = document.querySelector('.map__pins');
 var pinCloneTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-var renderPin = function (objectArray) {
+var renderPin = function (Array) {
   var pinClone = pinCloneTemplate.cloneNode(true);
-  pinClone.style = 'left: ' + String(objectArray.location.x) + 'px; top: ' + String(objectArray.location.y) + 'px;';
-  pinClone.querySelector('img').src = objectArray.author.avatar;
-  pinClone.querySelector('img').alt = objectArray.offer.title;
+  pinClone.style = 'left: ' + String(Array.location.x) + 'px; top: ' + String(Array.location.y) + 'px;';
+  // console.log(Array.location.x);
+  pinClone.style.left = Array.location.x + 'px';
+  pinClone.style.top = Array.location.y + 'px';
+  pinClone.querySelector('img').src = Array.author.avatar;
+  pinClone.querySelector('img').alt = Array.offer.title;
   return pinClone;
 };
 
 var pinFragment = document.createDocumentFragment();
 for (var j = 0; j < OBJECTS_QUANTITY; j++) {
-  pinFragment.appendChild(renderPin(objectDescripton[i]));
+  pinFragment.appendChild(renderPin(objectDescripton[j]));
 }
 
 pinsList.appendChild(pinFragment);
