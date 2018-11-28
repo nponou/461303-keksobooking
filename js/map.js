@@ -46,33 +46,54 @@ function getRandomArr(arr, n) {
   return result.sort();
 }
 
-for (var i = 0; i <= OBJECTS_QUANTITY; i++) {
+for (var i = 0; i < OBJECTS_QUANTITY; i++) {
   shuffleArr(types);
   shuffleArr(checkInsOutsArr);
+  var mapPinX = getRandomInteger(0, mapWidth);
+  var mapPinY = getRandomInteger(MAP_MIN_Y, MAP_MAX_Y);
   var objectDescripton = {
     'author': {
       'avatar': 'img/avatars/user0' + getRandomInteger(0, 8) + '.png'
     },
     'offer': {
-      'title': titles[i],
-      'address': (objectDescripton.location.x + ', ' + objectDescripton.location.y),
+      'title': titles[(titles.length - 1) - i],
+      'address': mapPinX + ', ' + mapPinY,
       'price': getRandomInteger(1000, 1000000),
-      'type': types[i],
+      'type': types[(getRandomInteger(0, types.length - 1))],
       'rooms': getRandomInteger(1, 5),
       'guests': getRandomInteger(1, 10),
-      'checkin': checkInsOutsArr[i],
-      'checkout': checkInsOutsArr[i - 1],
+      'checkin': checkInsOutsArr[(getRandomInteger(0, checkInsOutsArr.length - 1))],
+      'checkout': checkInsOutsArr[(getRandomInteger(0, checkInsOutsArr.length - 1))],
       'features': getRandomArr(featuresArr, getRandomInteger(1, featuresArr.length)), // тут функция для получения случайного массива из строк
       'description': '',
       'photos': shuffleArr(photosArr),
     },
     'location': {
-      'x': getRandomInteger(0, mapWidth),
-      'y': getRandomInteger(MAP_MIN_Y, MAP_MAX_Y)
+      'x': mapPinX,
+      'y': mapPinY
     }
   };
   objects.push(objectDescripton);
 }
 
+console.log(objectDescripton.location.x);
+
 document.querySelector('.map').classList.remove('map--faded');
-// Имя объекта apartment_description
+
+var pinsList = document.querySelector('.map__pins');
+var pinCloneTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
+var renderPin = function (objectArray) {
+  var pinClone = pinCloneTemplate.cloneNode(true);
+  pinClone.style = 'left: ' + String(objectArray.location.x) + 'px; top: ' + String(objectArray.location.y) + 'px;';
+  pinClone.querySelector('img').src = objectArray.author.avatar;
+  pinClone.querySelector('img').alt = objectArray.offer.title;
+  return pinClone;
+};
+
+var pinFragment = document.createDocumentFragment();
+for (var j = 0; j < OBJECTS_QUANTITY; j++) {
+  pinFragment.appendChild(renderPin(objectDescripton[i]));
+}
+
+pinsList.appendChild(pinFragment);
