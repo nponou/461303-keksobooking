@@ -76,7 +76,7 @@ for (var i = 0; i < OBJECTS_QUANTITY; i++) {
   objects.push(objectDescripton);
 }
 
-// console.log(objectDescripton.location.x);
+// console.log(objects[1].offer.features[1]);
 
 document.querySelector('.map').classList.remove('map--faded');
 
@@ -97,11 +97,20 @@ for (var j = 0; j < OBJECTS_QUANTITY; j++) {
   fragmentForPins.appendChild(renderPin(objects[j]));
 }
 
+var typeSelector = function (element) {
+  var typeName = 0;
+  if (element.offer.type === 'house') {
+    typeName = 'Дом';
+  } else if (element.offer.type === 'bungalo') {
+    typeName = 'Бунгало';
+  } else if (element.offer.type === 'palace') {
+    typeName = 'Дворец';
+  } else {
+    typeName = 'Квартира';
+  }
+  return typeName;
+};
 pinsList.appendChild(fragmentForPins);
-
-var renderPhotosInCard = function () {
-
-}
 
 var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
@@ -110,11 +119,26 @@ var renderAdvtCard = function (objectData) {
   cardClone.querySelector('.popup__title').textContent = objectData.offer.title;
   cardClone.querySelector('.popup__text--address').textContent = objectData.offer.address;
   cardClone.querySelector('.popup__text--price').innerHTML = objectData.offer.price + '₽/ночь';
-  // cardClone.querySelector('.popup__features') = objectData.offer.features;
+  cardClone.querySelector('.popup__type').textContent = typeSelector(objectData);
   cardClone.querySelector('.popup__text--capacity').innerHTML = objectData.offer.rooms + ' комнаты для ' + objectData.offer.guests + ' гостей';
   cardClone.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + objectData.offer.checkin + ', выезд до ' + objectData.offer.checkout;
   cardClone.querySelector('.popup__description').textContent = '';
-  // cardClone.querySelector('.popup__photos') =
+  cardClone.querySelector('.popup__features').innerHTML = '';
+  for (var featureIndex = 0; featureIndex < objectData.offer.features.length; featureIndex++) {
+    var featureElement = document.createElement('li');
+    featureElement.className = 'popup__feature popup__feature--' + objectData.offer.features[featureIndex];
+    cardClone.querySelector('.popup__features').appendChild(featureElement);
+  }
+  for (var photosQuantity = 0; photosQuantity <= objectData.offer.photos.length - 1; photosQuantity++) {
+    var photoClone = cardClone.querySelector('.popup__photo').cloneNode(true);
+    photoClone.src = objectData.offer.photos[photosQuantity];
+    cardClone.querySelector('.popup__photos').appendChild(photoClone);
+  }
+  // тут ниже какая-то дичь для удаления первого <img> я не уверен, что это правильное решение.
+  var parentnode = cardClone.querySelector('.popup__photos');
+  var childnode = parentnode.children;
+  childnode[0].remove();
+  cardClone.querySelector('.popup__avatar').src = objectData.author.avatar;
   return cardClone;
 };
 
