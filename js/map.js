@@ -11,7 +11,9 @@ var checkInsOutsArr = ['12:00', '13:00', '14:00'];
 var OBJECTS_QUANTITY = 8;
 var objects = [];
 var mapWidth = document.querySelector('.map').offsetWidth - document.querySelector('.map__pin').offsetWidth;
-var MAP_MIN_Y = 130;
+var PIN_WIDTH = document.querySelector('.map__pin').offsetWidth;
+var PIN_HEIGHT = document.querySelector('.map__pin').offsetHeight;
+var MAP_MIN_Y = 130 + PIN_HEIGHT;
 var MAP_MAX_Y = 630;
 var getRandomInteger = function (min, max) {
   var rand = min - 0.5 + Math.random() * (max - min + 1);
@@ -47,9 +49,10 @@ function getRandomArr(arr, n) {
 }
 
 for (var i = 0; i < OBJECTS_QUANTITY; i++) {
+  shuffleArr(titles);
   shuffleArr(types);
   shuffleArr(checkInsOutsArr);
-  var mapPinX = getRandomInteger(0, mapWidth);
+  var mapPinX = getRandomInteger(PIN_WIDTH, mapWidth);
   var mapPinY = getRandomInteger(MAP_MIN_Y, MAP_MAX_Y);
   var objectDescripton = {
     'author': {
@@ -57,7 +60,7 @@ for (var i = 0; i < OBJECTS_QUANTITY; i++) {
     },
     'offer': {
       'title': titles[(titles.length - 1) - i],
-      'address': mapPinX + ', ' + mapPinY,
+      'address': (mapPinX - Math.round(PIN_WIDTH / 2)) + ', ' + (mapPinY - PIN_HEIGHT),
       'price': getRandomInteger(1000, 1000000),
       'type': types[(getRandomInteger(0, types.length - 1))],
       'rooms': getRandomInteger(1, 5),
@@ -69,14 +72,12 @@ for (var i = 0; i < OBJECTS_QUANTITY; i++) {
       'photos': shuffleArr(photosArr)
     },
     'location': {
-      'x': mapPinX,
-      'y': mapPinY
+      'x': mapPinX - Math.round(PIN_WIDTH / 2),
+      'y': mapPinY - PIN_HEIGHT
     }
   };
   objects.push(objectDescripton);
 }
-
-// console.log(objects[1].offer.features[1]);
 
 document.querySelector('.map').classList.remove('map--faded');
 
