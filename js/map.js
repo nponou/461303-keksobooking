@@ -10,7 +10,7 @@ var photosArr = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o
 var checkInsOutsArr = ['12:00', '13:00', '14:00'];
 var OBJECTS_QUANTITY = 8;
 var objects = [];
-var mapWidth = document.querySelector('.map').offsetWidth;
+var mapWidth = document.querySelector('.map').offsetWidth - document.querySelector('.map__pin').offsetWidth;
 var MAP_MIN_Y = 130;
 var MAP_MAX_Y = 630;
 var getRandomInteger = function (min, max) {
@@ -66,7 +66,7 @@ for (var i = 0; i < OBJECTS_QUANTITY; i++) {
       'checkout': checkInsOutsArr[(getRandomInteger(0, checkInsOutsArr.length - 1))],
       'features': getRandomArr(featuresArr, getRandomInteger(1, featuresArr.length)), // тут функция для получения случайного массива из строк
       'description': '',
-      'photos': shuffleArr(photosArr),
+      'photos': shuffleArr(photosArr)
     },
     'location': {
       'x': mapPinX,
@@ -98,17 +98,12 @@ for (var j = 0; j < OBJECTS_QUANTITY; j++) {
 }
 
 var typeSelector = function (element) {
-  var typeName = 0;
-  if (element.offer.type === 'house') {
-    typeName = 'Дом';
-  } else if (element.offer.type === 'bungalo') {
-    typeName = 'Бунгало';
-  } else if (element.offer.type === 'palace') {
-    typeName = 'Дворец';
-  } else {
-    typeName = 'Квартира';
-  }
-  return typeName;
+  var TypeSelector = {
+    house: 'Дом',
+    bungalo: 'Бунгало',
+    palace: 'Дворец'
+  };
+  return TypeSelector[element.offer.type] ? TypeSelector[element.offer.type] : 'квартира';
 };
 pinsList.appendChild(fragmentForPins);
 
