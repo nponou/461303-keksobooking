@@ -10,7 +10,6 @@ var photosArr = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o
 var checkInsOutsArr = ['12:00', '13:00', '14:00'];
 var OBJECTS_QUANTITY = 8;
 var objects = [];
-// var pins = [];
 var mapWidth = document.querySelector('.map').offsetWidth - document.querySelector('.map__pin').offsetWidth;
 var PIN_WIDTH = document.querySelector('.map__pin').offsetWidth;
 var PIN_HEIGHT = document.querySelector('.map__pin').offsetHeight;
@@ -82,7 +81,7 @@ for (var i = 0; i < OBJECTS_QUANTITY; i++) {
 
 // document.querySelector('.map').classList.remove('map--faded');
 
-var pinsList = document.querySelector('.map__pins');
+var pinsContainer = document.querySelector('.map__pins');
 var pinCloneTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
 var renderPin = function (arrayElement) {
@@ -91,6 +90,8 @@ var renderPin = function (arrayElement) {
   pinClone.style.top = arrayElement.location.y + 'px';
   pinClone.querySelector('img').src = arrayElement.author.avatar;
   pinClone.querySelector('img').alt = arrayElement.offer.title;
+  pinClone.querySelector('img').style.pointerEvents = 'none';
+  pinClone.classList.add('hidden');
   return pinClone;
 };
 
@@ -98,7 +99,7 @@ var fragmentForPins = document.createDocumentFragment();
 for (var j = 0; j < OBJECTS_QUANTITY; j++) {
   fragmentForPins.appendChild(renderPin(objects[j]));
 }
-
+pinsContainer.appendChild(fragmentForPins);
 var typeSelector = function (element) {
   var TypeSelector = {
     house: 'Дом',
@@ -107,10 +108,8 @@ var typeSelector = function (element) {
   };
   return TypeSelector[element.offer.type] ? TypeSelector[element.offer.type] : 'квартира';
 };
-// pinsList.appendChild(fragmentForPins);
 
 var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-
 var renderAdvtCard = function (objectData) {
   var cardClone = mapCardTemplate.cloneNode(true);
   cardClone.querySelector('.popup__title').textContent = objectData.offer.title;
@@ -135,33 +134,47 @@ var renderAdvtCard = function (objectData) {
   var childnode = parentnode.children;
   childnode[0].remove();
   cardClone.querySelector('.popup__avatar').src = objectData.author.avatar;
+  cardClone.classList.add('hidden');
   return cardClone;
 };
-
-document.querySelector('.map').appendChild(renderAdvtCard(objects[1]));
-
+var pinsList = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 var mainPin = document.querySelector('.map__pin--main');
-
 var addressValueX = parseInt((mainPin.style.left), 10);
 var addressValueY = parseInt((mainPin.style.top), 10);
 var addressValueInput = document.getElementById('address');
-addressValueInput.value = addressValueX + ', ' + addressValueY;
+var filtersContainer = document.querySelector('.map__filters-container');
+var mapContainer = document.querySelector('.map');
 
 mainPin.addEventListener('mouseup', function () {
-  document.querySelector('.map').classList.remove('map--faded');
+  mapContainer.classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-  pinsList.appendChild(fragmentForPins);
-  // pins = document.querySelectorAll('.map__pin');
-  // console.log(pins.length);
+  addressValueInput.value = addressValueX + ', ' + addressValueY;
+  for (var z = 0; z < pinsList.length; z++) {
+    pinsList[z].classList.remove('hidden');
+  }
 });
 
-/* var onPinClick = function (object, card) {
-  object.addEventListener('click', function () {
-    console.log(object);
-    console.log(card);
-  });
-};
+for (var k = 0; k < objects.length; k++) {
+  mapContainer.insertBefore(renderAdvtCard(objects[k]), filtersContainer);
+}
+var popupsList = document.querySelectorAll('.popup');
+var closeButtons = document.querySelectorAll('.popup__close');
 
-for (var k = 1; k < pins.length; k++) {
-  onPinClick(pins[k], adCard[k]);
-} */
+function popupCloseHandler(btn) {
+  btn.classList.add('hidden');
+}
+
+function mapClickHandler(target, advPopup, closeBtn) {
+  target.addEventListener('click', function () {
+    advPopup.classList.remove('hidden');
+  });
+  closeBtn.addEventListener('click', function () {
+    if (closeBtn.parentNode === advPopup) {
+      popupCloseHandler(advPopup);
+    }
+  });
+}
+
+for (var a = 0; a < pinsList.length; a++) {
+  mapClickHandler(pinsList[a], popupsList[a], closeButtons[a]);
+}
