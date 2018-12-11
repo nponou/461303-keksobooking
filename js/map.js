@@ -188,3 +188,56 @@ function mapClickHandler(target, advPopup, closeBtn) {
 for (var a = 0; a < pinsList.length; a++) {
   mapClickHandler(pinsList[a], popupsList[a], closeButtons[a]);
 }
+
+var roomsCount = document.getElementById('room_number');
+var guestsCount = document.getElementById('capacity');
+
+roomsCount.addEventListener('change', function () {
+  switch (roomsCount.options[roomsCount.selectedIndex]) {
+    case roomsCount.options[0] :
+      guestsCount.options[0].setAttribute('disabled', 'disabled');
+      guestsCount.options[1].setAttribute('disabled', 'disabled');
+      guestsCount.options[2].removeAttribute('disabled');
+      guestsCount.options[3].setAttribute('disabled', 'disabled');
+      guestsCount.options[2].selected = true;
+      break;
+    case roomsCount.options[1] :
+      guestsCount.options[0].setAttribute('disabled', 'disabled');
+      guestsCount.options[1].removeAttribute('disabled');
+      guestsCount.options[1].selected = true;
+      guestsCount.options[2].removeAttribute('disabled');
+      guestsCount.options[3].setAttribute('disabled', 'disabled');
+      break;
+    case roomsCount.options[2] :
+      guestsCount.options[0].removeAttribute('disabled');
+      guestsCount.options[0].selected = true;
+      guestsCount.options[1].removeAttribute('disabled');
+      guestsCount.options[2].removeAttribute('disabled');
+      guestsCount.options[3].setAttribute('disabled', 'disabled');
+      break;
+    case roomsCount.options[3] :
+      guestsCount.options[0].setAttribute('disabled', 'disabled');
+      guestsCount.options[1].setAttribute('disabled', 'disabled');
+      guestsCount.options[2].setAttribute('disabled', 'disabled');
+      guestsCount.options[3].removeAttribute('disabled');
+      guestsCount.options[3].selected = true;
+      break;
+  }
+});
+
+var timeIn = document.getElementById('timein');
+var timeOut = document.getElementById('timeout');
+
+timeIn.addEventListener('change', function () {
+  switch (timeIn.options[timeIn.selectedIndex]) {
+    case timeIn.options[0] :
+      timeOut.options[0].selected = true;
+      break;
+    case timeIn.options[1] :
+      timeOut.options[1].selected = true;
+      break;
+    case timeIn.options[2] :
+      timeOut.options[2].selected = true;
+      break;
+  }
+});
