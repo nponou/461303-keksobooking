@@ -241,3 +241,28 @@ timeIn.addEventListener('change', function () {
       break;
   }
 });
+
+
+var typePrice = document.getElementById('price');
+var typesSelector = document.getElementById('type');
+
+typesSelector.addEventListener('change', function () {
+  switch (typesSelector.options[typesSelector.selectedIndex].value) {
+    case 'bungalo' :
+      typePrice.placeholder = '0';
+      typePrice.setAttribute('min', '0');
+      break;
+    case 'flat' :
+      typePrice.placeholder = '1000';
+      typePrice.setAttribute('min', '1000');
+      break;
+    case 'house' :
+      typePrice.placeholder = '5000';
+      typePrice.setAttribute('min', '5000');
+      break;
+    case 'palace' :
+      typePrice.placeholder = '10000';
+      typePrice.setAttribute('min', '10000');
+      break;
+  }
+});
