@@ -14,7 +14,7 @@ var mapWidth = document.querySelector('.map').offsetWidth - document.querySelect
 var PIN_WIDTH = document.querySelector('.map__pin').offsetWidth;
 var PIN_HEIGHT = document.querySelector('.map__pin').offsetHeight;
 var MAP_MIN_Y = 130 + PIN_HEIGHT;
-var MAP_MAX_Y = 630;
+var MAP_MAX_Y = 630 - PIN_HEIGHT;
 var getRandomInteger = function (min, max) {
   var rand = min - 0.5 + Math.random() * (max - min + 1);
   rand = Math.round(rand);
@@ -67,7 +67,7 @@ for (var i = 0; i < OBJECTS_QUANTITY; i++) {
       'guests': getRandomInteger(1, 10),
       'checkin': checkInsOutsArr[(getRandomInteger(0, checkInsOutsArr.length - 1))],
       'checkout': checkInsOutsArr[(getRandomInteger(0, checkInsOutsArr.length - 1))],
-      'features': getRandomArr(featuresArr, getRandomInteger(1, featuresArr.length)), // тут функция для получения случайного массива из строк
+      'features': getRandomArr(featuresArr, getRandomInteger(1, featuresArr.length)),
       'description': '',
       'photos': shuffleArr(photosArr)
     },
@@ -78,8 +78,6 @@ for (var i = 0; i < OBJECTS_QUANTITY; i++) {
   };
   objects.push(objectDescripton);
 }
-
-// document.querySelector('.map').classList.remove('map--faded');
 
 var pinsContainer = document.querySelector('.map__pins');
 var pinCloneTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -145,13 +143,65 @@ var addressValueInput = document.getElementById('address');
 var filtersContainer = document.querySelector('.map__filters-container');
 var mapContainer = document.querySelector('.map');
 
+mainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  var restrictedCoords = {
+    topY: 130,
+    bottomY: 630,
+    leftX: document.querySelector('.map').offsetLeft,
+    rightX: document.querySelector('.map').offsetWidth - PIN_WIDTH
+  };
+  var startCoordinates = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+  var mouseMoveHandler = function (moveEvt) {
+    moveEvt.preventDefault();
+    var shift = {
+      x: startCoordinates.x - moveEvt.clientX,
+      y: startCoordinates.y - moveEvt.clientY
+    };
+    startCoordinates = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+    if (startCoordinates.y < restrictedCoords.topY - PIN_HEIGHT) {
+      startCoordinates.y = restrictedCoords.topY;
+      mainPin.style.top = (restrictedCoords.topY) + 'px';
+      return;
+    } else if (startCoordinates.y > restrictedCoords.bottomY - PIN_HEIGHT) {
+      startCoordinates.y = restrictedCoords.bottomY;
+      mainPin.style.top = (restrictedCoords.bottomY) + 'px';
+      return;
+    }
+    if (startCoordinates.x < restrictedCoords.leftX) {
+      startCoordinates.x = -PIN_WIDTH / 2;
+      mainPin.style.left = -PIN_WIDTH / 2 + 'px';
+      return;
+    } else if (startCoordinates.x > restrictedCoords.rightX) {
+      startCoordinates.x = restrictedCoords.rightX - PIN_WIDTH;
+      mainPin.style.left = restrictedCoords.rightX - PIN_WIDTH + 'px';
+      return;
+    }
+    mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+    mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+  };
+  var mouseUpHandler = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mouseup', mouseUpHandler);
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    mapContainer.classList.remove('map--faded');
+    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+    addressValueInput.value = addressValueX + ', ' + addressValueY;
+    for (var z = 0; z < pinsList.length; z++) {
+      pinsList[z].classList.remove('hidden');
+    }
+  };
+  document.addEventListener('mousemove', mouseMoveHandler);
+  document.addEventListener('mouseup', mouseUpHandler);
+});
+
 mainPin.addEventListener('mouseup', function () {
-  mapContainer.classList.remove('map--faded');
-  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-  addressValueInput.value = addressValueX + ', ' + addressValueY;
-  for (var z = 0; z < pinsList.length; z++) {
-    pinsList[z].classList.remove('hidden');
-  }
 });
 
 for (var k = 0; k < objects.length; k++) {
