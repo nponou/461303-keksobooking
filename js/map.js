@@ -145,12 +145,6 @@ var mapContainer = document.querySelector('.map');
 
 mainPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
-  var restrictedCoords = {
-    topY: 130,
-    bottomY: 630,
-    leftX: document.querySelector('.map').offsetLeft,
-    rightX: document.querySelector('.map').offsetWidth - PIN_WIDTH
-  };
   var startCoordinates = {
     x: evt.clientX,
     y: evt.clientY
@@ -165,26 +159,31 @@ mainPin.addEventListener('mousedown', function (evt) {
       x: moveEvt.clientX,
       y: moveEvt.clientY
     };
-    if (startCoordinates.y < restrictedCoords.topY - PIN_HEIGHT) {
-      startCoordinates.y = restrictedCoords.topY;
-      mainPin.style.top = (restrictedCoords.topY) + 'px';
-      return;
-    } else if (startCoordinates.y > restrictedCoords.bottomY - PIN_HEIGHT) {
-      startCoordinates.y = restrictedCoords.bottomY;
-      mainPin.style.top = (restrictedCoords.bottomY) + 'px';
-      return;
+    var Map = {
+      left: mapContainer.offsetLeft,
+      top: mapContainer.offsetTop,
+      width: mapContainer.offsetWidth
+    };
+    var left;
+    var top;
+    if (startCoordinates.x - Map.left < 0) {
+      left = 0;
+    } else if (startCoordinates.x - Map.left + mainPin.offsetWidth > Map.width) {
+      left = Map.width - mainPin.offsetWidth;
+    } else {
+      left = startCoordinates.x - Map.left;
     }
-    if (startCoordinates.x < restrictedCoords.leftX) {
-      startCoordinates.x = -PIN_WIDTH / 2;
-      mainPin.style.left = -PIN_WIDTH / 2 + 'px';
-      return;
-    } else if (startCoordinates.x > restrictedCoords.rightX) {
-      startCoordinates.x = restrictedCoords.rightX - PIN_WIDTH;
-      mainPin.style.left = restrictedCoords.rightX - PIN_WIDTH + 'px';
-      return;
+    if (startCoordinates.y + mainPin.offsetHeight / 2 - 130 < Map.top) {
+      top = 130;
+    } else if (startCoordinates.y > 630) {
+      top = 630;
+    } else {
+      top = startCoordinates.y - shift.y;
     }
-    mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-    mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+    addressValueX = left;
+    addressValueY = top;
+    mainPin.style.left = left + 'px';
+    mainPin.style.top = top + 'px';
   };
   var mouseUpHandler = function (upEvt) {
     upEvt.preventDefault();
@@ -199,9 +198,6 @@ mainPin.addEventListener('mousedown', function (evt) {
   };
   document.addEventListener('mousemove', mouseMoveHandler);
   document.addEventListener('mouseup', mouseUpHandler);
-});
-
-mainPin.addEventListener('mouseup', function () {
 });
 
 for (var k = 0; k < objects.length; k++) {
