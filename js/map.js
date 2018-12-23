@@ -137,53 +137,52 @@ var renderAdvtCard = function (objectData) {
 };
 var pinsList = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 var mainPin = document.querySelector('.map__pin--main');
-var addressValueX = parseInt((mainPin.style.left), 10);
-var addressValueY = parseInt((mainPin.style.top), 10);
+var addressValueX = parseInt((mainPin.style.left), 10) + Math.round(PIN_WIDTH / 2);
+var addressValueY = parseInt((mainPin.style.top), 10) + PIN_HEIGHT;
 var addressValueInput = document.getElementById('address');
 var filtersContainer = document.querySelector('.map__filters-container');
 var mapContainer = document.querySelector('.map');
-
 mainPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
-  var startCoordinates = {
-    x: evt.clientX,
-    y: evt.clientY
+  var getCoords = function (elem) {
+    var box = elem.getBoundingClientRect();
+    return {
+      top: box.top + pageYOffset,
+      left: box.left + pageXOffset
+    };
+  };
+  var shift = {
+    X: evt.pageX - getCoords(mainPin).left,
+    Y: evt.pageY - getCoords(mainPin).top
+  };
+
+  var Map = {
+    left: mapContainer.offsetLeft,
+    width: mapContainer.offsetWidth
   };
   var mouseMoveHandler = function (moveEvt) {
     moveEvt.preventDefault();
-    var shift = {
-      x: startCoordinates.x - moveEvt.clientX,
-      y: startCoordinates.y - moveEvt.clientY
+    var Coords = {
+      x: moveEvt.pageX,
+      y: moveEvt.pageY,
+      pin: mainPin.getBoundingClientRect()
     };
-    startCoordinates = {
-      x: moveEvt.clientX,
-      y: moveEvt.clientY
-    };
-    var Map = {
-      left: mapContainer.offsetLeft,
-      top: mapContainer.offsetTop,
-      width: mapContainer.offsetWidth
-    };
-    var left;
-    var top;
-    if (startCoordinates.x - Map.left < 0) {
-      left = 0;
-    } else if (startCoordinates.x - Map.left + mainPin.offsetWidth > Map.width) {
-      left = Map.width - mainPin.offsetWidth;
-    } else {
-      left = startCoordinates.x - Map.left;
+    var left = Coords.x - Map.left;
+    var top = Coords.y;
+    if (Coords.x - Map.left - shift.X < 0) {
+      left = shift.X;
+    } else if (Coords.x + PIN_WIDTH - shift.X > Map.left + Map.width) {
+      left = Map.width - PIN_WIDTH + shift.X;
     }
-    if (startCoordinates.y + mainPin.offsetHeight / 2 - 130 < Map.top) {
-      top = 130;
-    } else if (startCoordinates.y > 630) {
-      top = 630;
-    } else {
-      top = startCoordinates.y - shift.y;
+    if (Coords.y + PIN_HEIGHT - shift.Y < MAP_MIN_Y) {
+      top = MAP_MIN_Y - PIN_HEIGHT + shift.Y;
+    } else if (Coords.y - shift.Y > MAP_MAX_Y) {
+      top = MAP_MAX_Y + shift.Y;
     }
-    addressValueX = left;
-    addressValueY = top;
-    mainPin.style.left = left + 'px';
-    mainPin.style.top = top + 'px';
+    mainPin.style.left = left - shift.X + 'px';
+    mainPin.style.top = top - shift.Y + 'px';
+    addressValueX = left + parseInt(PIN_WIDTH / 2, 10);
+    addressValueY = top + PIN_HEIGHT;
   };
   var mouseUpHandler = function (upEvt) {
     upEvt.preventDefault();
