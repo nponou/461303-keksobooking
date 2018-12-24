@@ -14,7 +14,7 @@ var mapWidth = document.querySelector('.map').offsetWidth - document.querySelect
 var PIN_WIDTH = document.querySelector('.map__pin').offsetWidth;
 var PIN_HEIGHT = document.querySelector('.map__pin').offsetHeight;
 var MAP_MIN_Y = 130 + PIN_HEIGHT;
-var MAP_MAX_Y = 630;
+var MAP_MAX_Y = 630 - PIN_HEIGHT;
 var getRandomInteger = function (min, max) {
   var rand = min - 0.5 + Math.random() * (max - min + 1);
   rand = Math.round(rand);
@@ -67,7 +67,7 @@ for (var i = 0; i < OBJECTS_QUANTITY; i++) {
       'guests': getRandomInteger(1, 10),
       'checkin': checkInsOutsArr[(getRandomInteger(0, checkInsOutsArr.length - 1))],
       'checkout': checkInsOutsArr[(getRandomInteger(0, checkInsOutsArr.length - 1))],
-      'features': getRandomArr(featuresArr, getRandomInteger(1, featuresArr.length)), // тут функция для получения случайного массива из строк
+      'features': getRandomArr(featuresArr, getRandomInteger(1, featuresArr.length)),
       'description': '',
       'photos': shuffleArr(photosArr)
     },
@@ -78,8 +78,6 @@ for (var i = 0; i < OBJECTS_QUANTITY; i++) {
   };
   objects.push(objectDescripton);
 }
-
-// document.querySelector('.map').classList.remove('map--faded');
 
 var pinsContainer = document.querySelector('.map__pins');
 var pinCloneTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -139,19 +137,66 @@ var renderAdvtCard = function (objectData) {
 };
 var pinsList = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 var mainPin = document.querySelector('.map__pin--main');
-var addressValueX = parseInt((mainPin.style.left), 10);
-var addressValueY = parseInt((mainPin.style.top), 10);
+var addressValueX = parseInt((mainPin.style.left), 10) + Math.round(PIN_WIDTH / 2);
+var addressValueY = parseInt((mainPin.style.top), 10) + PIN_HEIGHT;
 var addressValueInput = document.getElementById('address');
 var filtersContainer = document.querySelector('.map__filters-container');
 var mapContainer = document.querySelector('.map');
+mainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  var getCoords = function (elem) {
+    var box = elem.getBoundingClientRect();
+    return {
+      top: box.top + pageYOffset,
+      left: box.left + pageXOffset
+    };
+  };
+  var shift = {
+    X: evt.pageX - getCoords(mainPin).left,
+    Y: evt.pageY - getCoords(mainPin).top
+  };
 
-mainPin.addEventListener('mouseup', function () {
-  mapContainer.classList.remove('map--faded');
-  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-  addressValueInput.value = addressValueX + ', ' + addressValueY;
-  for (var z = 0; z < pinsList.length; z++) {
-    pinsList[z].classList.remove('hidden');
-  }
+  var Map = {
+    left: mapContainer.offsetLeft,
+    width: mapContainer.offsetWidth
+  };
+  var mouseMoveHandler = function (moveEvt) {
+    moveEvt.preventDefault();
+    var Coords = {
+      x: moveEvt.pageX,
+      y: moveEvt.pageY,
+      pin: mainPin.getBoundingClientRect()
+    };
+    var left = Coords.x - Map.left;
+    var top = Coords.y;
+    if (Coords.x - Map.left - shift.X < 0) {
+      left = shift.X;
+    } else if (Coords.x + PIN_WIDTH - shift.X > Map.left + Map.width) {
+      left = Map.width - PIN_WIDTH + shift.X;
+    }
+    if (Coords.y + PIN_HEIGHT - shift.Y < MAP_MIN_Y) {
+      top = MAP_MIN_Y - PIN_HEIGHT + shift.Y;
+    } else if (Coords.y - shift.Y > MAP_MAX_Y) {
+      top = MAP_MAX_Y + shift.Y;
+    }
+    mainPin.style.left = left - shift.X + 'px';
+    mainPin.style.top = top - shift.Y + 'px';
+    addressValueX = left + parseInt(PIN_WIDTH / 2, 10);
+    addressValueY = top + PIN_HEIGHT;
+  };
+  var mouseUpHandler = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mouseup', mouseUpHandler);
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    mapContainer.classList.remove('map--faded');
+    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+    addressValueInput.value = addressValueX + ', ' + addressValueY;
+    for (var z = 0; z < pinsList.length; z++) {
+      pinsList[z].classList.remove('hidden');
+    }
+  };
+  document.addEventListener('mousemove', mouseMoveHandler);
+  document.addEventListener('mouseup', mouseUpHandler);
 });
 
 for (var k = 0; k < objects.length; k++) {
