@@ -7,7 +7,7 @@
     cardClone.querySelector('.popup__title').textContent = objectData.offer.title;
     cardClone.querySelector('.popup__text--address').textContent = objectData.offer.address;
     cardClone.querySelector('.popup__text--price').innerHTML = objectData.offer.price + '₽/ночь';
-    cardClone.querySelector('.popup__type').textContent = window.Utils.typeSelector(objectData);
+    cardClone.querySelector('.popup__type').textContent = window.utils.typeSelector(objectData);
     cardClone.querySelector('.popup__text--capacity').innerHTML = objectData.offer.rooms + ' комнаты для ' + objectData.offer.guests + ' гостей';
     cardClone.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + objectData.offer.checkin + ', выезд до ' + objectData.offer.checkout;
     cardClone.querySelector('.popup__description').textContent = '';

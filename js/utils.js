@@ -40,7 +40,7 @@
       return TypeSelector[element.offer.type] ? TypeSelector[element.offer.type] : 'Квартира';
     }
   };
-  window.Utils = Utils;
+  window.utils = Utils;
 })();
 
 
