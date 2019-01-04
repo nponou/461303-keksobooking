@@ -13,10 +13,12 @@
     pinClone.classList.add('hidden');
     return pinClone;
   };
-
-  var fragmentForPins = document.createDocumentFragment();
-  for (var j = 0; j < window.Data.OBJECTS_QUANTITY; j++) {
-    fragmentForPins.appendChild(renderPin(window.Data.objects[j]));
-  }
-  pinsContainer.appendChild(fragmentForPins);
+  var successLoadHandler = function (objectData) {
+    var fragmentForPins = document.createDocumentFragment();
+    for (var j = 0; j < objectData.length; j++) {
+      fragmentForPins.appendChild(renderPin(objectData[j]));
+    }
+    pinsContainer.appendChild(fragmentForPins);
+  };
+  window.backend.load(successLoadHandler);
 })();

@@ -4,7 +4,10 @@
   var filtersContainer = document.querySelector('.map__filters-container');
   var renderAdvtCard = function (objectData) {
     var cardClone = mapCardTemplate.cloneNode(true);
-    cardClone.querySelector('.popup__title').textContent = objectData.offer.title;
+    var renderTitle = function (data) {
+      cardClone.querySelector('.popup__title').textContent = data.offer.title;
+    };
+    objectData.offer.title && renderTitle(objectData);
     cardClone.querySelector('.popup__text--address').textContent = objectData.offer.address;
     cardClone.querySelector('.popup__text--price').innerHTML = objectData.offer.price + '₽/ночь';
     cardClone.querySelector('.popup__type').textContent = window.utils.typeSelector(objectData);
@@ -17,7 +20,7 @@
       featureElement.className = 'popup__feature popup__feature--' + objectData.offer.features[featureIndex];
       cardClone.querySelector('.popup__features').appendChild(featureElement);
     }
-    for (var photosQuantity = 0; photosQuantity <= objectData.offer.photos.length - 1; photosQuantity++) {
+    for (var photosQuantity = 0; photosQuantity < objectData.offer.photos.length; photosQuantity++) {
       var photoClone = cardClone.querySelector('.popup__photo').cloneNode(true);
       photoClone.src = objectData.offer.photos[photosQuantity];
       cardClone.querySelector('.popup__photos').appendChild(photoClone);
@@ -29,7 +32,13 @@
     cardClone.classList.add('hidden');
     return cardClone;
   };
-  for (var k = 0; k < window.Data.objects.length; k++) {
-    document.querySelector('.map').insertBefore(renderAdvtCard(window.Data.objects[k]), filtersContainer);
-  }
+  var successLoadHandler = function (objectData) {
+    for (var k = 0; k < objectData.length; k++) {
+      document.querySelector('.map').insertBefore(renderAdvtCard(objectData[k]), filtersContainer);
+    }
+  };
+  window.backend.load(function (data) {
+    successLoadHandler(data);
+    window.pinClickHandler();
+  });
 })();
