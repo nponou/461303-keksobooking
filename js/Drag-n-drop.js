@@ -49,16 +49,14 @@
       addressValueY = top + window.Data.PIN_HEIGHT;
     };
     var mouseUpHandler = function (upEvt) {
-      var pinsList = document.querySelectorAll('.map__pin:not(.map__pin--main)');
       upEvt.preventDefault();
       document.removeEventListener('mouseup', mouseUpHandler);
       document.removeEventListener('mousemove', mouseMoveHandler);
       mapContainer.classList.remove('map--faded');
       document.querySelector('.ad-form').classList.remove('ad-form--disabled');
       addressValueInput.value = addressValueX + ', ' + addressValueY;
-      for (var z = 0; z < pinsList.length; z++) {
-        pinsList[z].classList.remove('hidden');
-      }
+      window.loadPinDataHandler();
+      window.loadCardDataHandler();
     };
     document.addEventListener('mousemove', mouseMoveHandler);
     document.addEventListener('mouseup', mouseUpHandler);
