@@ -77,4 +77,35 @@
         break;
     }
   });
+  var form = document.querySelector('.ad-form');
+  var pinsList = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  var successHandler = function (evt) {
+    evt.preventDefault();
+    var removeSuccessHandler = function () {
+      document.querySelector('.map').removeChild(document.querySelector('.active__message'));
+      document.removeEventListener('click', removeSuccessHandler);
+      var openedPopup = document.querySelector('.popup.active');
+      openedPopup.classList.add('hidden');
+      for (var i = 0; i < pinsList.length; i++) {
+        pinsList[i].classList.add('hidden');
+      }
+    };
+    window.backend.save(new FormData(form), function () {
+      var successLoadMsg = document.getElementById('success').content.querySelector('.success');
+      successLoadMsg.classList.add('active__message');
+      document.querySelector('.map').insertAdjacentElement('afterbegin', successLoadMsg);
+      form.reset();
+    });
+    document.addEventListener('click', removeSuccessHandler);
+    document.addEventListener('keydown', function (keyEvt) {
+      if (keyEvt.keyCode === 27) {
+        removeSuccessHandler();
+      }
+    });
+  };
+  var resetBtn = document.querySelector('.ad-form__reset');
+  resetBtn.addEventListener('click', function () {
+    form.reset();
+  });
+  form.addEventListener('submit', successHandler);
 })();

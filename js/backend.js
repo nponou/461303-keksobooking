@@ -26,7 +26,7 @@
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
       xhr.addEventListener('load', function () {
-        onLoad(xhr.response);
+        onLoad(xhr);
       });
       xhr.addEventListener('error', function () {
         onError(xhr);
@@ -35,7 +35,7 @@
         onError(xhr.response);
       });
       xhr.timeout = 10000;
-      xhr.open('post', URL);
+      xhr.open('POST', URL);
       xhr.send(data);
     }
   };
