@@ -53,6 +53,7 @@
       document.removeEventListener('mouseup', mouseUpHandler);
       document.removeEventListener('mousemove', mouseMoveHandler);
       mapContainer.classList.remove('map--faded');
+      window.utils.disableFilterList(false);
       document.querySelector('.ad-form').classList.remove('ad-form--disabled');
       addressValueInput.value = addressValueX + ', ' + addressValueY;
       window.loadPinDataHandler();
