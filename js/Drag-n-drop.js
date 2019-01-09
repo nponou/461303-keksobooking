@@ -1,11 +1,10 @@
 'use strict';
 (function () {
-  var pinsList = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
   var mainPin = document.querySelector('.map__pin--main');
   var addressValueX = parseInt((mainPin.style.left), 10) + Math.round(window.Data.PIN_WIDTH / 2);
   var addressValueY = parseInt((mainPin.style.top), 10) + window.Data.PIN_HEIGHT;
   var addressValueInput = document.getElementById('address');
-
   var mapContainer = document.querySelector('.map');
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -54,10 +53,11 @@
       document.removeEventListener('mouseup', mouseUpHandler);
       document.removeEventListener('mousemove', mouseMoveHandler);
       mapContainer.classList.remove('map--faded');
+      window.utils.disableFilterList(false);
       document.querySelector('.ad-form').classList.remove('ad-form--disabled');
       addressValueInput.value = addressValueX + ', ' + addressValueY;
-      for (var z = 0; z < pinsList.length; z++) {
-        pinsList[z].classList.remove('hidden');
+      if (document.querySelectorAll('.map__pin').length === 1) {
+        window.backend.load(window.loader, window.backend.ErrorHandler);
       }
     };
     document.addEventListener('mousemove', mouseMoveHandler);
