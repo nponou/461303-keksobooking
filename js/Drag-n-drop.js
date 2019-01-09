@@ -56,8 +56,9 @@
       window.utils.disableFilterList(false);
       document.querySelector('.ad-form').classList.remove('ad-form--disabled');
       addressValueInput.value = addressValueX + ', ' + addressValueY;
-      window.loadPinDataHandler();
-      window.loadCardDataHandler();
+      if (document.querySelectorAll('.map__pin').length === 1) {
+        window.backend.load(window.loader, window.backend.ErrorHandler);
+      }
     };
     document.addEventListener('mousemove', mouseMoveHandler);
     document.addEventListener('mouseup', mouseUpHandler);
