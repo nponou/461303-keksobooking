@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var loader = function (objectData) {
+    window.Data.objects = objectData;
     var pinsContainer = document.querySelector('.map__pins');
     var pinCloneTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
