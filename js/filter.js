@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var dataCopy = {};
+
   function doFeatureFilter(notice, feature) {
     var bool = false;
     for (var i = 0; i < notice.offer.features.length; i++) {
@@ -11,6 +12,7 @@
     }
     return bool;
   }
+
   var dataFilterFncn = function () {
     window.utils.clearMap();
     dataCopy = window.Data.objects;
@@ -70,20 +72,24 @@
         return doFeatureFilter(obj, 'conditioner');
       });
     }
-    window.renderPin(dataCopy);
+    window.loader(dataCopy, false);
   };
   var housingFilters = document.querySelector('.map__filters-container').querySelectorAll('select');
   for (var j = 0; j < housingFilters.length; j++) {
-    housingFilters[j].addEventListener('change', function () {
+    housingFilters[j].addEventListener('change', window.utils.debounce(function () {
       dataFilterFncn();
-    });
+    })
+    );
   }
   var featuresFilter = document.querySelectorAll('.map__checkbox');
   for (var i = 0; i < featuresFilter.length; i++) {
     featuresFilter[i].addEventListener('click', function () {
       var featuresChecked = document.querySelectorAll('.map__checkbox:checked');
       for (var b = 0; b < featuresChecked.length; b++) {
-        dataFilterFncn();
+        housingFilters[j].addEventListener('change', window.utils.debounce(function () {
+          dataFilterFncn();
+        })
+        );
       }
     });
   }
