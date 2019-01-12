@@ -27,14 +27,14 @@
         }
         cardClone.querySelector('.popup__description').textContent = '';
         cardClone.querySelector('.popup__features').innerHTML = '';
-        if (offer.photos.length > 0) {
+        if (offer.features.length > 0) {
           for (var featureIndex = 0; featureIndex < offer.features.length; featureIndex++) {
             var featureElement = document.createElement('li');
             featureElement.className = 'popup__feature popup__feature--' + offer.features[featureIndex];
             cardClone.querySelector('.popup__features').appendChild(featureElement);
           }
         }
-        if (offer.features.length > 0) {
+        if (offer.photos.length > 0) {
           for (var photosQuantity = 0; photosQuantity < offer.photos.length; photosQuantity++) {
             var photoClone = cardClone.querySelector('.popup__photo').cloneNode(true);
             photoClone.src = offer.photos[photosQuantity];

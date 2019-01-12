@@ -85,6 +85,20 @@
       filterList.push(document.querySelectorAll('.map__filters input'));
       filterList.push(document.querySelectorAll('.ad-form__element button'));
       return filterList;
+    },
+    DEBOUNCE_INTERVAL: 500,
+    debounce: function (cb) {
+      var _this = this;
+      var lastTimeout = null;
+      return function () {
+        var parameters = arguments;
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = window.setTimeout(function () {
+          cb.apply(null, parameters);
+        }, _this.DEBOUNCE_INTERVAL);
+      };
     }
   };
   window.utils = Utils;
