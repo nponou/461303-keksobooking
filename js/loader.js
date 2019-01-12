@@ -38,7 +38,7 @@
         if (offer.title) {
           renderContent(offer.title, '.popup__title');
         }
-        if (offer.addres) {
+        if (offer.address) {
           renderContent(offer.address, '.popup__text--address');
         }
         if (offer.price) {

@@ -101,6 +101,7 @@
       };
     }
   };
+  Utils.resetMap();
   window.utils = Utils;
 })();
 
