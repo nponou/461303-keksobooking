@@ -39,7 +39,7 @@
     }
     if (document.getElementById('housing-guests').value !== 'any') {
       dataCopy = dataCopy.filter(function (obj) {
-        return obj.offer.rooms.toString() === document.getElementById('housing-rooms').value;
+        return obj.offer.rooms.toString() === document.getElementById('housing-guests').value;
       });
     }
     if (document.getElementById('filter-wifi').checked) {
