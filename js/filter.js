@@ -78,19 +78,12 @@
   for (var j = 0; j < housingFilters.length; j++) {
     housingFilters[j].addEventListener('change', window.utils.debounce(function () {
       dataFilterFncn();
-    })
-    );
+    }));
   }
   var featuresFilter = document.querySelectorAll('.map__checkbox');
   for (var i = 0; i < featuresFilter.length; i++) {
-    featuresFilter[i].addEventListener('click', function () {
-      var featuresChecked = document.querySelectorAll('.map__checkbox:checked');
-      for (var b = 0; b < featuresChecked.length; b++) {
-        housingFilters[j].addEventListener('change', window.utils.debounce(function () {
-          dataFilterFncn();
-        })
-        );
-      }
-    });
+    featuresFilter[i].addEventListener('click', window.utils.debounce(function () {
+      dataFilterFncn();
+    }));
   }
 })();
