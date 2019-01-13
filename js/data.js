@@ -12,10 +12,12 @@
     OBJECTS_QUANTITY: 8,
     objects: [],
     mapWidth: document.querySelector('.map').offsetWidth - document.querySelector('.map__pin').offsetWidth,
-    PIN_WIDTH: document.querySelector('.map__pin').offsetWidth,
-    PIN_HEIGHT: document.querySelector('.map__pin').offsetHeight,
-    MAP_MIN_Y: 130 + document.querySelector('.map__pin').offsetHeight,
-    MAP_MAX_Y: 630 - document.querySelector('.map__pin').offsetHeight,
+    WIDTH: 60,
+    HEIGHT: 80,
+    MIN_X: -30,
+    MIN_Y: 50,
+    MAX_X: 1170,
+    MAX_Y: 550
   };
   window.Data = Data;
   for (var i = 0; i < window.Data.OBJECTS_QUANTITY; i++) {
