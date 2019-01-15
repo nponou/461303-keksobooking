@@ -36,23 +36,15 @@
     }
   });
 
-  var timeIn = document.getElementById('timein');
-  var timeOut = document.getElementById('timeout');
+  var timeIn = document.querySelector('#timein');
+  var timeOut = document.querySelector('#timeout');
 
   timeIn.addEventListener('change', function () {
-    switch (timeIn.options[timeIn.selectedIndex]) {
-      case timeIn.options[0] :
-        timeOut.options[0].selected = true;
-        break;
-      case timeIn.options[1] :
-        timeOut.options[1].selected = true;
-        break;
-      case timeIn.options[2] :
-        timeOut.options[2].selected = true;
-        break;
-    }
+    timeOut.value = timeIn.value;
   });
-
+  timeOut.addEventListener('change', function () {
+    timeIn.value = timeOut.value;
+  });
 
   var typePrice = document.getElementById('price');
   var typesSelector = document.getElementById('type');
@@ -96,6 +88,7 @@
       document.querySelector('.map').removeChild(document.querySelector('.active__message'));
       document.removeEventListener('click', removeMessageHandler);
     };
+    window.utils.changeAddressState(false);
     window.backend.save(new FormData(form), renderSuccessMessageHandler, renderErrorMessageHandler);
     document.addEventListener('click', removeMessageHandler);
     document.addEventListener('keydown', function (keyEvt) {

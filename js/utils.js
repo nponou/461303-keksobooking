@@ -22,11 +22,14 @@
       this.autoCompleteAddress(mainPin);
       this.clearMap();
     },
+    inputAddress: document.querySelector('#address'),
+    changeAddressState: function (state) {
+      this.inputAddress.disabled = (state === 'disabled') ? true : false;
+      this.inputAddress.readOnly = (state === 'disabled') ? false : true;
+    },
     autoCompleteAddress: function (element) {
-      var inputAddress = document.querySelector('#address');
-      inputAddress.disabled = true;
-      inputAddress.readOnly = false;
-      inputAddress.value = (+element.style.left.substr(0, element.style.left.length - 2) + element.offsetWidth / 2)
+      this.changeAddressState('disabled');
+      this.inputAddress.value = (+element.style.left.substr(0, element.style.left.length - 2) + element.offsetWidth / 2)
         + ', ' + (+element.style.top.substr(0, element.style.top.length - 2) + element.offsetHeight);
     },
     clearMap: function () {

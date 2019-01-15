@@ -3,7 +3,7 @@
   var loadCardDataHandler = function () {
     var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
     var filtersContainer = document.querySelector('.map__filters-container');
-    var renderAdvtCard = function (data) {
+    var renderAdCard = function (data) {
       var cardClone = mapCardTemplate.cloneNode(true);
       var renderContent = function (content, selector) {
         cardClone.querySelector(selector).textContent = content;
@@ -52,7 +52,7 @@
     };
     var successLoadHandler = function (objectData) {
       for (var k = 0; k < objectData.length; k++) {
-        document.querySelector('.map').insertBefore(renderAdvtCard(objectData[k]), filtersContainer);
+        document.querySelector('.map').insertBefore(renderAdCard(objectData[k]), filtersContainer);
       }
     };
     window.backend.load(function (data) {

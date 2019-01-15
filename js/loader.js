@@ -1,8 +1,8 @@
 'use strict';
 (function () {
-  var loader = function (objectData, load) {
+  var loader = function (loadedData, load) {
     if (load) {
-      window.Data.objects = objectData;
+      window.Data.objects = loadedData;
     }
     var MAX_NOTICE = 5;
     var pinsContainer = document.querySelector('.map__pins');
@@ -19,16 +19,16 @@
     };
 
     var fragmentForPins = document.createDocumentFragment();
-    for (var j = 0; j < objectData.length; j++) {
+    for (var j = 0; j < loadedData.length; j++) {
       if (j === MAX_NOTICE) {
         break;
       }
-      fragmentForPins.appendChild(renderPin(objectData[j]));
+      fragmentForPins.appendChild(renderPin(loadedData[j]));
     }
     pinsContainer.appendChild(fragmentForPins);
     var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
     var filtersContainer = document.querySelector('.map__filters-container');
-    var renderAdvtCard = function (data) {
+    var renderAdCard = function (data) {
       var cardClone = mapCardTemplate.cloneNode(true);
       var renderContent = function (content, selector) {
         cardClone.querySelector(selector).textContent = content;
@@ -68,19 +68,19 @@
         }
       }
       cardClone.querySelector('.popup__type').textContent = window.utils.typeSelector(data);
-      var parentnode = cardClone.querySelector('.popup__photos');
-      var childnode = parentnode.children;
-      childnode[0].remove();
+      var parentNode = cardClone.querySelector('.popup__photos');
+      var childNode = parentNode.children;
+      childNode[0].remove();
       cardClone.querySelector('.popup__avatar').src = data.author.avatar;
       cardClone.classList.add('hidden');
       return cardClone;
     };
 
-    for (var k = 0; k < objectData.length; k++) {
+    for (var k = 0; k < loadedData.length; k++) {
       if (k === MAX_NOTICE) {
         break;
       }
-      document.querySelector('.map').insertBefore(renderAdvtCard(objectData[k]), filtersContainer);
+      document.querySelector('.map').insertBefore(renderAdCard(loadedData[k]), filtersContainer);
     }
     window.pinClickHandler();
   };

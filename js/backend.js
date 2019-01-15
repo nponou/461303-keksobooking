@@ -3,13 +3,13 @@
   var closeErrorClickHandler = function (button, error) {
     button.addEventListener('click', function () {
       document.body.removeChild(error);
-      window.map.reset();
+      window.utils.resetMap();
     });
   };
-  var onXhrEvent = function (xhr, onLoad, onError) {
+  var addXhrEvents = function (xhr, onLoad, onError) {
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
-        onLoad(xhr.response);
+        onLoad(xhr.response, true);
       } else {
         onError('Статус ответа: ' + xhr.status);
       }
@@ -19,20 +19,19 @@
     });
   };
   var Backend = {
-    load: function (onLoad, onError) {
+    load: function (loadHandler, errorHandler) {
       var URL = 'https://js.dump.academy/keksobooking/data';
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
-      onXhrEvent(xhr, onLoad, onError);
+      addXhrEvents(xhr, loadHandler, errorHandler);
       xhr.open('GET', URL);
       xhr.send();
     },
-    save: function (data, onLoad, onError) {
+    save: function (data, loadHandler, errorHandler) {
       var URL = 'https://js.dump.academy/keksobooking';
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
-      onXhrEvent(xhr, onLoad, onError);
-      xhr.timeout = 10000;
+      addXhrEvents(xhr, loadHandler, errorHandler);
       xhr.open('POST', URL);
       xhr.send(data);
     },

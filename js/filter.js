@@ -3,17 +3,17 @@
   var dataCopy = {};
 
   function doFeatureFilter(notice, feature) {
-    var bool = false;
+    var check = false;
     for (var i = 0; i < notice.offer.features.length; i++) {
-      bool = (notice.offer.features[i] === feature);
-      if (bool) {
+      check = (notice.offer.features[i] === feature);
+      if (check) {
         break;
       }
     }
-    return bool;
+    return check;
   }
 
-  var dataFilterFncn = function () {
+  var filtrate = function () {
     window.utils.clearMap();
     dataCopy = window.Data.objects;
     if (document.getElementById('housing-type').value !== 'any') {
@@ -27,19 +27,18 @@
           return parseInt(obj.offer.price, 10) < 10000;
         } else if (document.getElementById('housing-price').value.toString() === 'middle') {
           return parseInt(obj.offer.price, 10) >= 10000 && parseInt(obj.offer.price, 10) < 50000;
-        } else {
-          return parseInt(obj.offer.price, 10) >= 50000;
         }
+        return parseInt(obj.offer.price, 10) >= 50000;
       });
     }
     if (document.getElementById('housing-rooms').value !== 'any') {
       dataCopy = dataCopy.filter(function (obj) {
-        return obj.offer.guests.toString() === document.getElementById('housing-rooms').value;
+        return obj.offer.rooms.toString() === document.getElementById('housing-rooms').value;
       });
     }
     if (document.getElementById('housing-guests').value !== 'any') {
       dataCopy = dataCopy.filter(function (obj) {
-        return obj.offer.rooms.toString() === document.getElementById('housing-guests').value;
+        return obj.offer.guests.toString() === document.getElementById('housing-guests').value;
       });
     }
     if (document.getElementById('filter-wifi').checked) {
@@ -77,13 +76,13 @@
   var housingFilters = document.querySelector('.map__filters-container').querySelectorAll('select');
   for (var j = 0; j < housingFilters.length; j++) {
     housingFilters[j].addEventListener('change', window.utils.debounce(function () {
-      dataFilterFncn();
+      filtrate();
     }));
   }
   var featuresFilter = document.querySelectorAll('.map__checkbox');
   for (var i = 0; i < featuresFilter.length; i++) {
     featuresFilter[i].addEventListener('click', window.utils.debounce(function () {
-      dataFilterFncn();
+      filtrate();
     }));
   }
 })();
