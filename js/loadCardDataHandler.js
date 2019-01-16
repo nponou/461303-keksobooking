@@ -43,9 +43,9 @@
         }
       }
       cardClone.querySelector('.popup__type').textContent = window.utils.typeSelector(data);
-      var parentnode = cardClone.querySelector('.popup__photos');
-      var childnode = parentnode.children;
-      childnode[0].remove();
+      var parentNode = cardClone.querySelector('.popup__photos');
+      var childNode = parentNode.children;
+      childNode[0].remove();
       cardClone.querySelector('.popup__avatar').src = data.author.avatar;
       cardClone.classList.add('hidden');
       return cardClone;
